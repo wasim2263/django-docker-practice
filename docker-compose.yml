@@ -18,7 +18,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=wasim2263
+      - POSTGRES_USER=wasim
       - POSTGRES_PASSWORD=wasim2263
       - POSTGRES_DB=django_app_docker
 
