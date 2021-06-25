@@ -12,6 +12,7 @@ services:
       - ./.env.dev
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:12.0-alpine
@@ -21,6 +22,20 @@ services:
       - POSTGRES_USER=wasim
       - POSTGRES_PASSWORD=wasim2263
       - POSTGRES_DB=django_app_docker
+
+  celery:
+    build: .
+    command: celery worker --app=django_docker --loglevel=info --logfile=logs/celery.log
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - web
+      - redis
+
+  redis:
+    image: redis:6-alpine
 
 volumes:
   postgres_data:
