@@ -25,7 +25,7 @@ services:
 
   celery:
     build: .
-    command: celery worker --app=django_docker --loglevel=info --logfile=logs/celery.log
+    command: celery worker --app=django_docker --loglevel=info
     volumes:
       - .:/usr/src/app
     env_file:

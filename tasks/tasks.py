@@ -5,19 +5,19 @@ import time
 from celery import shared_task
 
 
-@shared_task('task_list_1')
+@shared_task(name='task_list_1')
 def create_task(task_type):
     time.sleep(int(task_type) * 10)
     return True
 
 
-@shared_task('task_list_2')
+@shared_task(name='task_list_2')
 def test_app(a):
     print(a)
     return True
 
 
-@shared_task('task_list_3')
+@shared_task(name='task_list_3')
 def test_app2(a):
     print(a)
     return True
