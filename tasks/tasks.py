@@ -17,7 +17,7 @@ def test_app(a):
     return True
 
 
-@shared_task('task_list_1')
+@shared_task('task_list_3')
 def test_app2(a):
     print(a)
     return True
