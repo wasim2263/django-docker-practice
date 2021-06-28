@@ -25,7 +25,7 @@ services:
 
   celery:
     build: .
-    command: celery worker --app=django_docker --loglevel=info
+    command: celery worker --app=django_docker --loglevel=info -Q default,priority_high
     volumes:
       - .:/usr/src/app
     env_file:
