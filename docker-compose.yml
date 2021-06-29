@@ -43,6 +43,16 @@ services:
     depends_on:
       - web
       - redis
+  celery_beat:
+    build: .
+    command: celery -A django_docker beat -l info  --pidfile=
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - web
+      - redis
   redis:
     image: redis:6-alpine
   dashboard:
@@ -57,6 +67,7 @@ services:
       - redis
       - celery
       - celery_single
+      - celery_beat
 
 volumes:
   postgres_data:
