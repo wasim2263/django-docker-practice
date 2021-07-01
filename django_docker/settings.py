@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import environ
 
+ROOT_DIR = environ.Path(__file__) - 2  # (review/config/settings/base.py - 3 = review/)
+
+APPS_DIR = ROOT_DIR.path('apps')
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from celery.schedules import crontab
 
@@ -37,12 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'celery',
     # 'django_celery_results',
     'django_celery_beat',
-
+    # apps
     'tasks.apps.TasksConfig'
+    'apps.product',
+    'apps.customer',
+    'apps.purchase',
 ]
 
 MIDDLEWARE = [
@@ -56,11 +62,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'django_docker.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            str(APPS_DIR.path('templates')),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,7 +75,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
+
         },
     },
 ]
@@ -136,3 +146,14 @@ CELERY_BEAT_SCHEDULE = {
         'options': {'queue': 'default'},
     },
 }
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+# allauth settings
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
