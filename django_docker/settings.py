@@ -162,7 +162,7 @@ CELERY_IMPORTS = ['tasks']
 CELERY_BEAT_SCHEDULE = {
     "sample_task": {
         "task": "tasks.tasks.periodic_task",
-        "schedule": crontab(minute="*/1"),
+        "schedule": crontab(minute="*/15"),
         'options': {'queue': 'default'},
     },
 }
