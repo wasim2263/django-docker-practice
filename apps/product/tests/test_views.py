@@ -3,7 +3,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-from apps.product.models import Category
+from apps.product.models import Category, Product
 
 
 class TestProductViews(TestCase):
@@ -24,7 +24,7 @@ class TestProductViews(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'product/product-list.html')
 
-    def test_single_product_post(self):
+    def test_single_product_post_get(self):
         product_add_url = reverse('product:product-add', kwargs={'product_id': None})
         category = Category.objects.create(name='test-category')
         product = {
@@ -37,3 +37,14 @@ class TestProductViews(TestCase):
         }
         response = self.client.post(product_add_url, product)
         self.assertEquals(response.status_code, 302)
+
+        product_single = Product.objects.filter(code='test-code').first()
+        product_single_url = reverse('product:product-edit', kwargs={'product_id': product_single.id})
+        response = self.client.get(product_single_url)
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'product/product-add.html')
+        product['unit_price'] = 30
+        response = self.client.post(product_single_url, product)
+        self.assertEquals(response.status_code, 302)
+        product_single = Product.objects.filter(code='test-code').first()
+        self.assertEquals(product_single.unit_price, 30)
